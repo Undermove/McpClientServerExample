@@ -1,0 +1,4 @@
+﻿<Solution>
+  <Project Path="McpClient\McpClient.csproj" Type="Classic C#" />
+  <Project Path="McpServer\McpServer.csproj" Type="Classic C#" />
+</Solution>
