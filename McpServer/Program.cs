@@ -1,5 +1,6 @@
 global using System.ComponentModel;
 global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
 global using ModelContextProtocol;
 global using ModelContextProtocol.Server;
 
@@ -11,6 +12,9 @@ builder.Services
     .WithStdioServerTransport()
     // 👇🏼 Register all tools with McpToolType attribute    
     .WithTools();
+
+// Configure logging to only show errors
+builder.Logging.SetMinimumLevel(LogLevel.Error);
 await builder.Build().RunAsync();
 
 // 👇🏼 Mark our type as a container for MCP tools

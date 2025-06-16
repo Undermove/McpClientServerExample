@@ -25,7 +25,7 @@ var config = new McpServerConfig
 };
 
 using var factory =
-    LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Trace));
+    LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Error));
 
 // 👇🏼 Get an MCP session scope used to get the MCP tools
 await using var mcpClient = 
