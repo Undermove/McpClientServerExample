@@ -1,7 +1,7 @@
-using System.ComponentModel;
-using McpDotNet.Server;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+global using System.ComponentModel;
+global using Microsoft.Extensions.Hosting;
+global using ModelContextProtocol;
+global using ModelContextProtocol.Server;
 
 var builder = Host.CreateEmptyApplicationBuilder(settings: null);
 builder.Services
@@ -10,7 +10,7 @@ builder.Services
     // 👇🏼 uses Stdio as transport protocol    
     .WithStdioServerTransport()
     // 👇🏼 Register all tools with McpToolType attribute    
-    .WithTools<object>();
+    .WithTools();
 await builder.Build().RunAsync();
 
 // 👇🏼 Mark our type as a container for MCP tools
