@@ -1,7 +1,7 @@
-using McpDotNet.Client;
-using McpDotNet.Configuration;
-using McpDotNet.Protocol.Transport;
-using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Logging;
+global using ModelContextProtocol.Client;
+global using ModelContextProtocol.Configuration;
+global using ModelContextProtocol.Protocol.Transport;
 
 Console.WriteLine("Hello, official MCP csharp-sdk and MCP Server!");
 
