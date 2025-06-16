@@ -23,7 +23,7 @@ public static class TimeTool
 {
     // 👇🏼 Mark a method as an MCP tools
     [McpTool, Description("Get the current time for a city")]
-    public static string GetCurrentTime(string city) => 
+    public static string GetCurrentTimeInCity(string city) => 
         $"It is {DateTime.Now.Hour}:{DateTime.Now.Minute} in {city}.";
 }
 
@@ -33,7 +33,7 @@ public static class FileSystemTool
 {
     // 👇🏼 Mark a method as an MCP tool for listing files in a directory
     [McpTool, Description("Get a list of files in the specified directory")]
-    public static string[] ListFiles(string directoryPath)
+    public static string[] ListFilesAndSubdirectories(string directoryPath)
     {
         try
         {
@@ -44,7 +44,7 @@ public static class FileSystemTool
             }
 
             // Get all files in the directory
-            return Directory.GetFiles(directoryPath);
+            return Directory.GetFileSystemEntries(directoryPath);
         }
         catch (Exception ex)
         {
