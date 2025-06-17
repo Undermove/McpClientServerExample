@@ -1,54 +1,41 @@
-global using System.ComponentModel;
-global using Microsoft.Extensions.Hosting;
-global using Microsoft.Extensions.Logging;
-global using ModelContextProtocol;
-global using ModelContextProtocol.Server;
+using System.ComponentModel;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using ModelContextProtocol;
+using ModelContextProtocol.Server;
 
 var builder = Host.CreateEmptyApplicationBuilder(settings: null);
 builder.Services
-    // 👇🏼 We build an MCP Server   
     .AddMcpServer()
-    // 👇🏼 uses Stdio as transport protocol    
     .WithStdioServerTransport()
-    // 👇🏼 Register all tools with McpToolType attribute    
     .WithTools();
 
-// Configure logging to only show errors
 builder.Logging.SetMinimumLevel(LogLevel.Error);
 await builder.Build().RunAsync();
 
-// 👇🏼 Mark our type as a container for MCP tools
 [McpToolType]
 public static class TimeTool
 {
-    // 👇🏼 Mark a method as an MCP tools
     [McpTool, Description("Get the current time for a city")]
     public static string GetCurrentTimeInCity(string city) => 
         $"It is {DateTime.Now.Hour}:{DateTime.Now.Minute} in {city}.";
 }
 
-// 👇🏼 Mark our type as a container for file system tools
 [McpToolType]
 public static class FileSystemTool
 {
-    // 👇🏼 Mark a method as an MCP tool for listing files in a directory
     [McpTool, Description("Get a list of files in the specified directory")]
     public static string[] ListFilesAndSubdirectories(string directoryPath)
     {
         try
         {
-            // Check if directory exists
-            if (!Directory.Exists(directoryPath))
-            {
-                return new[] { $"Error: Directory '{directoryPath}' does not exist." };
-            }
-
-            // Get all files in the directory
-            return Directory.GetFileSystemEntries(directoryPath);
+            return !Directory.Exists(directoryPath) 
+                ? [$"Error: Directory '{directoryPath}' does not exist."]
+                : Directory.GetFileSystemEntries(directoryPath);
         }
         catch (Exception ex)
         {
-            return new[] { $"Error: {ex.Message}" };
+            return [$"Error: {ex.Message}"];
         }
     }
 }
