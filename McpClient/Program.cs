@@ -3,6 +3,7 @@ using ModelContextProtocol.Client;
 using ModelContextProtocol.Configuration;
 using ModelContextProtocol.Protocol.Transport;
 using ModelContextProtocol.Protocol.Types;
+using System.Text.Json;
 
 Console.WriteLine("Start MCP client!");
 
@@ -37,8 +38,84 @@ await using var mcpClient =
 // 3. Подключаемся к серверу и просим его прислать доступные тулзы
 var mcpTools = await mcpClient.GetAIFunctionsAsync();
 
-Console.WriteLine("\nAvailable tools:");
-foreach (var tool in mcpTools)
+Console.WriteLine("\nДоступные инструменты:");
+
+// Создаем структуру в формате MCP list_tools
+var toolsResponse = new
 {
-    Console.WriteLine($"- {tool.Name}: {tool.Description}");
-}
+    tools = mcpTools.Select(tool => new
+    {
+        name = tool.Name,
+        description = tool.Description,
+        inputSchema = tool.JsonSchema
+    }).ToArray()
+};
+
+// Выводим в формате JSON с красивым форматированием
+var jsonOptions = new JsonSerializerOptions
+{
+    WriteIndented = true,
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+};
+
+var jsonOutput = JsonSerializer.Serialize(toolsResponse, jsonOptions);
+Console.WriteLine(jsonOutput);
+
+// 4. Отправляем список тулзов в LLM
+Console.WriteLine("\nОтправляем список tools в LLM");
+
+Console.WriteLine("\nВведите запрос к LLM (например, 'Какое сейчас время в Москве?'):");
+
+// 5. Как бы запрос к LLM с использованием MCP тулзов
+var userQuery = Console.ReadLine();
+
+// 6. Эмулируем ответ от LLM - она анализирует запрос и решает какой tool вызвать
+Console.WriteLine("\n=== Ответ от LLM ===");
+Console.WriteLine("Для ответа на ваш запрос мне нужно вызвать инструмент для получения времени. Вот JSON для вызова:");
+var toolCall = new
+{
+    method = "tools/call",
+    @params = new
+    {
+        name = "GetCurrentTimeInCity",
+        arguments = new
+        {
+            city = "Москва"
+        }
+    }
+};
+
+var toolCallJson = JsonSerializer.Serialize(toolCall, jsonOptions);
+Console.WriteLine(toolCallJson);
+                  
+// 7. Дергаем инструмент, который попросила дернуть LLM
+Console.WriteLine("\n=== Вызываем инструмент GetCurrentTimeInCity ===");
+
+
+// Вызываем функцию через MCP клиент
+string cityToQuery = "Москва";
+var result = await mcpClient.CallToolAsync("GetCurrentTimeInCity", new Dictionary<string, object>
+{
+    ["city"] = cityToQuery
+});
+
+Console.WriteLine("\n=== Результат от сервера ===");
+Console.WriteLine($"Результат: {result.Content}");
+    
+// Выводим результат в JSON формате для красоты
+var resultJson = new
+{
+    toolName = "GetCurrentTimeInCity",
+    input = new { city = cityToQuery },
+    output = result.Content,
+    isError = result.IsError
+};
+    
+var resultJsonString = JsonSerializer.Serialize(resultJson, jsonOptions);
+Console.WriteLine("\nРезультат в JSON:");
+Console.WriteLine(resultJsonString);
+
+// 8. Передаем ответ от сервера обратно в LLM
+Console.WriteLine("\nПередаем результат обратно в LLM для финального ответа...");
+Console.WriteLine($"\nОтвет от LLM: {result.Content}");
+
