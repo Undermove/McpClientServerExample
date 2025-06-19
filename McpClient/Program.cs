@@ -64,6 +64,10 @@ Console.WriteLine(jsonOutput);
 // 4. Отправляем список тулзов в LLM
 Console.WriteLine("\nОтправляем список tools в LLM");
 
+// тут может быть вызов к LLM API, чтобы передать список доступных инструментов
+// который может выглядеть так
+// var llmResponse = await llmClient.SendToolsListAsync(mcpTools);
+
 Console.WriteLine("\nВведите запрос к LLM (например, 'Какое сейчас время в Батуми?'):");
 
 // 5. Как бы запрос к LLM с использованием MCP тулзов
@@ -100,8 +104,6 @@ var result = await mcpClient.CallToolAsync("GetCurrentTimeInCity", new Dictionar
 });
 
 Console.WriteLine("\n=== Результат от сервера ===");
-Console.WriteLine($"Результат: {result.Content}");
-    
 // Выводим результат в JSON формате для красоты
 var resultJson = new
 {
