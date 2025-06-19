@@ -68,7 +68,7 @@ Console.WriteLine("\nОтправляем список tools в LLM");
 // который может выглядеть так
 // var llmResponse = await llmClient.SendToolsListAsync(mcpTools);
 
-Console.WriteLine("\nВведите запрос к LLM (например, 'Какое сейчас время в Батуми?'):");
+Console.WriteLine("\nВведите запрос к LLM (например, 'Какое сейчас время в Batumi?'):");
 
 // 5. Как бы запрос к LLM с использованием MCP тулзов
 var userQuery = Console.ReadLine();
@@ -84,7 +84,7 @@ var toolCall = new
         name = "GetCurrentTimeInCity",
         arguments = new
         {
-            city = "Батуми"
+            city = "Batumi"
         }
     }
 };
@@ -97,7 +97,7 @@ Console.WriteLine("\n=== Вызываем инструмент GetCurrentTimeInC
 
 
 // Вызываем функцию через MCP клиент
-string cityToQuery = "Батуми";
+string cityToQuery = "Batumi";
 var result = await mcpClient.CallToolAsync("GetCurrentTimeInCity", new Dictionary<string, object>
 {
     ["city"] = cityToQuery
