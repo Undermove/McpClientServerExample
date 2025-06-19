@@ -117,5 +117,5 @@ Console.WriteLine(resultJsonString);
 
 // 8. Передаем ответ от сервера обратно в LLM
 Console.WriteLine("\nПередаем результат обратно в LLM для финального ответа...");
-Console.WriteLine($"\nОтвет от LLM: {result.Content}");
+Console.WriteLine($"\nОтвет от LLM: {result.Content[0].Text}");
 
