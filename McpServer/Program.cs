@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
 
+// 1. Сетапим севрер
 var builder = Host.CreateEmptyApplicationBuilder(settings: null);
 builder.Services
     .AddMcpServer()
@@ -13,6 +14,7 @@ builder.Services
 builder.Logging.SetMinimumLevel(LogLevel.Error);
 await builder.Build().RunAsync();
 
+// 2. Добавляем tool который возвращает время
 [McpToolType]
 public static class TimeTool
 {
@@ -21,6 +23,7 @@ public static class TimeTool
         $"It is {DateTime.Now.Hour}:{DateTime.Now.Minute} in {city}.";
 }
 
+// 3. Добавляем tool который может смотреть файловую систему
 [McpToolType]
 public static class FileSystemTool
 {

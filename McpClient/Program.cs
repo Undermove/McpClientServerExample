@@ -4,7 +4,7 @@ using ModelContextProtocol.Configuration;
 using ModelContextProtocol.Protocol.Transport;
 using ModelContextProtocol.Protocol.Types;
 
-Console.WriteLine("Hello, official MCP csharp-sdk and MCP Server!");
+Console.WriteLine("Start MCP client!");
 
 McpClientOptions options = new()
 {
@@ -15,6 +15,7 @@ McpClientOptions options = new()
     }
 };
 
+// 1. Говорим, как поднять и подключиться к серверу
 var config = new McpServerConfig
 {
     Id = "fileSystem",
@@ -29,9 +30,11 @@ var config = new McpServerConfig
 using var factory =
     LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Critical));
 
+// 2. Создаем клиент, который будет подключаться к серверу
 await using var mcpClient = 
     await McpClientFactory.CreateAsync(config, options, loggerFactory: factory);
 
+// 3. Подключаемся к серверу и просим его прислать доступные тулзы
 var mcpTools = await mcpClient.GetAIFunctionsAsync();
 
 Console.WriteLine("\nAvailable tools:");
